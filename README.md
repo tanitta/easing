@@ -1,14 +1,13 @@
 easing
 ====
 
-#Description
+##Description
 
-easing is a library that add flavor to motion.
+easing is a library that add flavor to motion in D programming language.
 
-#Usage
+##Usage
 
 ```
-import easing;
-10.map!linear(0.0, 10.0, 0.0, 1.0);
+10.map!linear(0.0, 10.0)
 ```
 
