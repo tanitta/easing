@@ -2,26 +2,17 @@ module easing;
 
 import easing.functions;
 
-pure T map(alias F = linear, T)(in T v1, in T minIn, in T maxIn, in T minOut, in T maxOut, bool isClamp = true){
-	T epsilon;
-	static if(is(T == int)){
-		epsilon = 0;
-	}else{
-		epsilon = T.epsilon;
-	}
-	import std.math;
-	if(( maxIn - minIn ).abs <= epsilon){
-		return minOut;
-	}else{
-		if(isClamp){
-			return clamp( (v1 - minIn) / (maxIn - minIn) * (maxOut - minOut) + minOut, minOut, maxOut);
-		}else{
-			return (v1 - minIn) / (maxIn - minIn) * (maxOut - minOut) + minOut;
-		}
-	}
+pure T map(alias F = linear, T, Options ...)(in T v, in T minIn, in T maxIn, in T minOut, in T maxOut, Options options){
+	T time = v - minIn;
+	T change = maxOut - minOut;
+	T duration = maxIn - minIn;
+	T begin = minOut;
+	
+	return F(time, begin, duration, change, options);
 }
 unittest{
 	assert(0.0.map!linear(0.0, 10.0, 0.0, 1.0) == 0.0);
+	assert(5.0.map!linear(0.0, 10.0, 0.0, 1.0) == 0.5);
 	assert(10.0.map!linear(0.0, 10.0, 0.0, 1.0) == 1.0);
 }
 
