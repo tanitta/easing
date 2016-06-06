@@ -1,0 +1,9 @@
+{
+	"name": "easing",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2016, tanitta",
+	"authors": ["tanitta"],
+	"targetType": "library",
+	"dependencies": {
+	}
+}
