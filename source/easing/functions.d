@@ -66,7 +66,7 @@ alias easeInOutQuint = Quint.easeInOut;
 
 class Circ{
 	import std.math;
-	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
+	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return -change * (sqrt(T(1) - (time/=duration)*time) - T(1)) + begin;
 	}
 	
@@ -86,6 +86,48 @@ class Circ{
 alias easeInCirc = Circ.easeIn;
 alias easeOutCirc = Circ.easeOut;
 alias easeInOutCirc = Circ.easeInOut;
+
+class Elastic{
+	import std.math;
+	static pure T easeIn(T)(T time, T begin, T duration, T change){
+		if (time==T(0)) return begin;
+		if ((time/=duration)==T(1)) return begin+change;
+		T p = duration*T(0.3);
+		T a = change;
+		T s = p/T(4);
+		T postFix =a*pow(T(2),T(10)*(time-=T(1)));
+		return -(postFix * sin((time*duration-s)*(T(2)*T(PI))/p )) + begin; 
+	}
+	
+	static pure T easeOut(T)(T time, T begin, T duration, T change){
+		if (time==T(0)) return begin;
+		if ((time/=duration)==T(1)) return begin+change;
+		T p = duration*T(0.3);
+		T a = change;
+		T s = p/T(4);
+		return (a*pow(T(2),T(-10)*time) * sin( (time*duration-s)*(T(2)*T(PI))/p ) + change + begin);
+	}
+	
+	static pure T easeInOut(T)(T time, T begin, T duration, T change){
+		if (time==T(0)) return begin;
+		if ((time/=duration/T(2))==T(2)) return begin+change;
+		T p=duration*T(0.3*1.5);
+		T a=change;
+		T s=p/T(4);
+
+		if (time < T(1)) {
+			T postFix =a*pow(T(2),T(10)*(time-=T(1))); // postIncrement is evil
+			return T(-0.5)*(postFix* sin( (time*duration-s)*(T(2)*T(PI))/p )) + begin;
+		}
+		T postFix =  a*pow(T(2),T(-10)*(time-=T(1))); // postIncrement is evil
+		return postFix * sin( (time*duration-s)*(T(2)*T(PI))/p )*T(0.5) + change + begin;
+	}
+	
+}
+
+alias easeInElastic = Elastic.easeIn;
+alias easeOutElastic = Elastic.easeOut;
+alias easeInOutElastic = Elastic.easeInOut;
 
 class Quad{
 	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
