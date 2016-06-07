@@ -153,3 +153,24 @@ alias easeInQuad = Quad.easeIn;
 alias easeOutQuad = Quad.easeOut;
 alias easeInOutQuad = Quad.easeInOut;
 	
+class Quart{
+	static pure T easeIn(T)(T time, T begin, T duration, T change){
+		return change*(time/=duration)*time*time*time + begin;
+	}
+
+	static pure T easeOut(T)(T time, T begin, T duration, T change){
+		return -change * ((time=time/duration-T(1))*time*time*time - T(1)) + begin;
+	}
+
+	static pure T easeInOut(T)(T time, T begin, T duration, T change){
+		if ((time/=duration/T(2)) < T(1)){
+			return change/T(2)*time*time*time*time + begin;
+		}else{
+			return -change/T(2) * ((time-=T(2))*time*time*time - T(2)) + begin;
+		};
+	}
+}
+
+alias easeInQuart = Quart.easeIn;
+alias easeOutQuart = Quart.easeOut;
+alias easeInOutQuart = Quart.easeInOut;
