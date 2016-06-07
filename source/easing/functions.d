@@ -174,3 +174,24 @@ class Quart{
 alias easeInQuart = Quart.easeIn;
 alias easeOutQuart = Quart.easeOut;
 alias easeInOutQuart = Quart.easeInOut;
+
+class Expo{
+	static pure T easeIn(T)(T time, T begin, T duration, T change){
+		return (time==T(0)) ? begin : change * pow(T(2), T(10) * (time/duration - T(1))) + begin;
+	}
+
+	static pure T easeOut(T)(T time, T begin, T duration, T change){
+		return (time==duration) ? begin+change : change * (-pow(T(2), T(-10) * time/duration) + T(1)) + begin;
+	}
+
+	static pure T easeInOut(T)(T time, T begin, T duration, T change){
+		if (time==T(0)) return begin;
+		if (time==duration) return begin+change;
+		if ((time/=duration/T(2)) < T(1)) return change/T(2) * Math.pow(T(2), T(10) * (time - T(1))) + begin;
+		return change/T(2) * (-pow(T(2), T(-10) * --time) + T(2)) + begin;
+	}
+}
+
+alias easeInExpo = Expo.easeIn;
+alias easeOutExpo = Expo.easeOut;
+alias easeInOutExpo = Expo.easeInOut;
