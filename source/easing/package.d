@@ -8,12 +8,7 @@ pure T map(alias F = linear, T, Options...)( in T v, in T minIn, in T maxIn, in 
 	T duration = maxIn - minIn;
 	T begin = minOut;
 	
-	static if(Options.length){
-		return F(time, begin, duration, change, options);
-	}else{
-		return F(time, begin, duration, change);
-	}
-	
+	return F(time, begin, duration, change, options);
 }
 
 //map should accept optional args
