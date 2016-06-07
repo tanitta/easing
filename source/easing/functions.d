@@ -43,6 +43,50 @@ alias easeInQubic = Qubic.easeIn;
 alias easeOutQubic = Qubic.easeOut;
 alias easeInOutQubic = Qubic.easeInOut;
 
+class Quint{
+	static pure T easeIn(T)(T time, T begin, T duration, T change){
+		return change*(time/=duration)*time*time*time*time + begin;
+	}
+	
+	static pure T easeOut(T)(T time, T begin, T duration, T change){
+		return change*((time=time/duration-T(1))*time*time*time*time + T(1)) + begin;
+	}
+	
+	static pure T easeInOut(T)(T time, T begin, T duration, T change){
+		if ((time/=duration/T(2)) < 1){
+			return change/T(2)*time*time*time*time*time + begin;
+		}else {
+			return change/T(2)*((time-=T(2))*time*time*time*time + T(2)) + begin;
+		}
+	}
+}
+alias easeInQuint = Quint.easeIn;
+alias easeOutQuint = Quint.easeOut;
+alias easeInOutQuint = Quint.easeInOut;
+
+class Circ{
+	import std.math;
+	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
+		return -change * (sqrt(T(1) - (time/=duration)*time) - T(1)) + begin;
+	}
+	
+	static pure T easeOut(T)(T time, T begin, T duration, T change){
+		return change * sqrt(T(1) - (time=time/duration-1)*time) + begin;
+	}
+	
+	static pure T easeInOut(T)(T time, T begin, T duration, T change){
+		if ((time/=duration/T(2)) < T(1)) {
+			return -change/T(2) * (sqrt(T(1) - time*time) - T(1)) + begin;
+		}else{
+			return change/T(2) * (sqrt(T(1) - (time-=T(2))*time) + T(1)) + begin;
+		}
+	}
+}
+
+alias easeInCirc = Circ.easeIn;
+alias easeOutCirc = Circ.easeOut;
+alias easeInOutCirc = Circ.easeInOut;
+
 class Quad{
 	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
 		immutable divTimeByDuration = time/duration; 
