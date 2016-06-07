@@ -10,7 +10,7 @@ pure T linear(T)(in T time, in T begin, in T duration, in T change){
 // 	return change * divTimeByDuration^^2 + begin;
 // }
 
-class quad{
+class Quad{
 	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
 		immutable divTimeByDuration = time/duration; 
 		return change * divTimeByDuration^^2 + begin;
@@ -29,7 +29,8 @@ class quad{
 		}
 	}
 }
-alias easeInQuad = quad.easeIn;
-alias easeOutQuad = quad.easeOut;
-alias easeInOutQuad = quad.easeInOut;
+
+alias easeInQuad = Quad.easeIn;
+alias easeOutQuad = Quad.easeOut;
+alias easeInOutQuad = Quad.easeInOut;
 	
