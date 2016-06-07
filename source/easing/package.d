@@ -15,9 +15,10 @@ unittest{
 	assert(5.0.map!linear(0.0, 10.0, 0.0, 1.0) == 0.5);
 	assert(10.0.map!linear(0.0, 10.0, 0.0, 1.0) == 1.0);
 	
-	assert(0.0.map!quad(0.0, 10.0, 0.0, 1.0) == 0.0);
-	assert(5.0.map!quad(0.0, 10.0, 0.0, 1.0) == 0.25);
-	assert(10.0.map!quad(0.0, 10.0, 0.0, 1.0) == 1.0);
+	assert(0.0.map!(quad.easeIn)(0.0, 10.0, 0.0, 1.0) == 0.0);
+	assert(0.0.map!easeInQuad(0.0, 10.0, 0.0, 1.0) == 0.0);
+	// assert(5.0.map!quad(0.0, 10.0, 0.0, 1.0) == 0.25);
+	// assert(10.0.map!quad(0.0, 10.0, 0.0, 1.0) == 1.0);
 }
 
 pure T clamp(T)(in T v, in T min, in T max){
