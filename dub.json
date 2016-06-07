@@ -3,6 +3,7 @@
 	"description": "A minimal D application.",
 	"copyright": "Copyright © 2016, tanitta",
 	"authors": ["tanitta"],
+	"license": "MIT",
 	"targetType": "library",
 	"dependencies": {
 	}
