@@ -4,6 +4,23 @@ pure T linear(T)(in T time, in T begin, in T duration, in T change){
 	return change/duration * time + begin;
 }
 
+class Sine{
+	import std.math;
+	static pure T easeIn(T)(T time, T begin, T duration, T change){
+		return -change * cos(time/duration * (PI/T(2))) + change + begin;
+	}
+	
+	static pure T easeOut(T)(T time, T begin, T duration, T change){
+		return change * sin(time/duration * (PI/T(2))) + begin;
+	}
+	
+	static pure T easeInOut(T)(T time, T begin, T duration, T change){
+		return -change/T(2) * (cos(PI*time/duration) - T(1)) + begin;
+	}
+}
+alias easeInSine = Sine.easeIn;
+alias easeOutSine = Sine.easeOut;
+alias easeInOutSine = Sine.easeInOut;
 
 class Qubic{
 	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
