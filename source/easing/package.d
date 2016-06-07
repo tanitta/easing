@@ -40,7 +40,7 @@ unittest{
 	
 }
 
-pure T clamp(T)(in T v, in T min, in T max){
+private pure T clamp(T)(in T v, in T min, in T max){
 	if (v < min) {
 		return min;
 	}else if(max < v){
