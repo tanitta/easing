@@ -5,10 +5,26 @@ pure T linear(T)(in T time, in T begin, in T duration, in T change){
 }
 
 
-// pure T quad(T)(in T time, in T begin, in T duration, in T change){
-// 	immutable divTimeByDuration = time/duration; 
-// 	return change * divTimeByDuration^^2 + begin;
-// }
+class Qubic{
+	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
+		return change*(time/=duration)*time*time + begin;
+	}
+	
+	static pure T easeOut(T)(T time, T begin, T duration, T change){
+		return change*((time=time/duration-T(1))*time*time + T(1)) + begin;
+	}
+	
+	static pure T easeInOut(T)(T time, T begin, T duration, T change){
+		if ((time/=duration/T(2)) < T(1)){
+			return change/T(2)*time*time*time + begin;
+		}else {
+			return change/T(2)*((time-=T(2))*time*time + T(2)) + begin;
+		}
+	}
+}
+alias easeInQubic = Qubic.easeIn;
+alias easeOutQubic = Qubic.easeOut;
+alias easeInOutQubic = Qubic.easeInOut;
 
 class Quad{
 	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
