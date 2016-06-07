@@ -1,6 +1,6 @@
 {
 	"name": "easing",
-	"description": "A minimal D application.",
+	"description": "A library that add flavor to motion in D programming language.",
 	"copyright": "Copyright © 2016, tanitta",
 	"authors": ["tanitta"],
 	"license": "MIT",
