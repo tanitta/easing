@@ -2,6 +2,7 @@ easing
 ====
 
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/tanitta/easing/blob/master/LICENSE)
+[![Dub version](https://img.shields.io/dub/v/easing.svg)](https://code.dlang.org/packages/easing)
 
 ##Description
 
