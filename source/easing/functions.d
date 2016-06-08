@@ -300,3 +300,40 @@ unittest{
 	assert(0.0.easeInOutExpo(0.0, 10.0, 10.0) == 0.0);
 	assert(10.0.easeInOutExpo(0.0, 10.0, 10.0) == 10.0);
 }
+
+class Back{
+	static pure T easeIn(T)(T time, T begin, T duration, T change, T s = 1.70158){
+		immutable T postFix = time/=duration;
+		return change*(postFix)*time*((s+T(1))*time - s) + begin;
+	}
+
+	static pure T easeOut(T)(T time, T begin, T duration, T change, T s = 1.70158){
+		time=time/duration-T(1);
+		return change*(time*time*((s+T(1))*time + s) + T(1)) + begin;
+	}
+
+	static pure T easeInOut(T)(T time, T begin, T duration, T change, T s = 1.70158){
+		s*=(1.525f);
+		if ((time/=duration/T(2)) < T(1)){
+			return change/T(2)*(time*time*((s+T(1))*time - s)) + begin;
+		}
+		immutable T postFix = time-=T(2);
+		return change/T(2)*((postFix)*time*((s+T(1))*time + s) + T(2)) + begin;
+	}
+}
+
+alias easeInBack = Back.easeIn;
+alias easeOutBack = Back.easeOut;
+alias easeInOutBack = Back.easeInOut;
+
+unittest{
+	import std.math;
+	assert(approxEqual(0.0.easeInBack(0.0, 10.0, 10.0), 0.0));
+	assert(approxEqual(10.0.easeInBack(0.0, 10.0, 10.0), 10.0));
+	
+	assert(approxEqual(0.0.easeOutBack(0.0, 10.0, 10.0), 0.0));
+	assert(approxEqual(10.0.easeOutBack(0.0, 10.0, 10.0), 10.0));
+	
+	assert(approxEqual(0.0.easeInOutBack(0.0, 10.0, 10.0), 0.0));
+	assert(approxEqual(10.0.easeInOutBack(0.0, 10.0, 10.0), 10.0));
+}

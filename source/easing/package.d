@@ -32,7 +32,6 @@ unittest{
 	assert(10.0.map!(Quad.easeIn)(0.0, 10.0, 0.0, 1.0) == 1.0);
 	
 	assert(0.0.map!easeInQuad(0.0, 10.0, 0.0, 1.0) == 0.0.map!(Quad.easeIn)(0.0, 10.0, 0.0, 1.0));
-	
 }
 
 private pure T clamp(T)(in T v, in T min, in T max){
