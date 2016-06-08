@@ -8,6 +8,48 @@ easing is a library that add flavor to motion in D programming language.
 ##Usage
 
 ```
-immutable easedValue = time.map!linear(0.0, 10.0, 0.0, 1.0);
+import easing;
+auto output = input.map!linear(0.0, 10.0, 0.0, 1.0);
+//                      |      |    |     |    |
+// easing function -----+      |    |     |    |
+// min of input ---------------+    |     |    |
+// max of input --------------------+     |    |
+// min of output -------------------------+    |
+// max of output ------------------------------+
 ```
 
+##Easing functions
+
+- linear
+- easeInSine
+- easeOutSine
+- easeInOutSine
+- easeInCubic
+- easeOutCubic
+- easeInOutCubic
+- easeInQuint
+- easeOutQuint
+- easeInOutQuint
+- easeInCirc
+- easeOutCirc
+- easeInOutCirc
+- easeInElastic
+- easeOutElastic
+- easeInOutElastic
+- easeInQuad
+- easeOutQuad
+- easeInOutQuad
+- easeInQuart
+- easeOutQuart
+- easeInOutQuart
+- easeInExpo
+- easeOutExpo
+- easeInOutExpo
+- easeInBack
+- easeOutBack
+- easeInOutBack
+- easeInBounce
+- easeOutBounce
+- easeInOutBounce
+
+Please look at [http://easings.net/](http://easings.net/) regarding details of implemented functions.
