@@ -1,6 +1,8 @@
 easing
 ====
 
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/tanitta/easing/blob/master/LICENSE)
+
 ##Description
 
 easing is a library that add flavor to motion in D programming language.
