@@ -1,6 +1,6 @@
 module easing;
 
-import easing.functions;
+public import easing.functions;
 
 pure T map(alias F = linear, T, Options...)( in T v, in T minIn, in T maxIn, in T minOut, in T maxOut, Options options){
 	T time = v - minIn;
