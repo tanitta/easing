@@ -10,8 +10,11 @@ unittest{
 }
 
 
-class Sine{
+struct Sine{
+    @disable this();
+    
 	import std.math;
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return -change * cos(time/duration * (PI/T(2))) + change + begin;
 	}
@@ -41,7 +44,9 @@ unittest{
 }
 
 
-class Qubic{
+struct Qubic{
+    @disable this();
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return change*(time/=duration)*time*time + begin;
 	}
@@ -75,7 +80,9 @@ unittest{
 }
 
 
-class Quint{
+struct Quint{
+    @disable this();
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return change*(time/=duration)*time*time*time*time + begin;
 	}
@@ -109,7 +116,9 @@ unittest{
 }
 
 
-class Circ{
+struct Circ{
+    @disable this();
+    
 	import std.math;
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return -change * (sqrt(T(1) - (time/=duration)*time) - T(1)) + begin;
@@ -144,8 +153,11 @@ unittest{
 }
 
 
-class Elastic{
+struct Elastic{
+    @disable this();
+    
 	import std.math;
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		if (time==T(0)) return begin;
 		if ((time/=duration)==T(1)) return begin+change;
@@ -198,7 +210,9 @@ unittest{
 }
 
 
-class Quad{
+struct Quad{
+    @disable this();
+    
 	static pure T easeIn(T)(in T time, in T begin, in T duration, in T change){
 		immutable divTimeByDuration = time/duration; 
 		return change * divTimeByDuration^^2 + begin;
@@ -234,7 +248,9 @@ unittest{
 }
 	
 
-class Quart{
+struct Quart{
+    @disable this();
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return change*(time/=duration)*time*time*time + begin;
 	}
@@ -268,8 +284,11 @@ unittest{
 }
 
 
-class Expo{
+struct Expo{
+    @disable this();
+    
 	import std.math;
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return (time==T(0)) ? begin : change * pow(T(2), T(10) * (time/duration - T(1))) + begin;
 	}
@@ -302,7 +321,9 @@ unittest{
 }
 
 
-class Back{
+struct Back{
+    @disable this();
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change, T s = 1.70158){
 		immutable T postFix = time/=duration;
 		return change*(postFix)*time*((s+T(1))*time - s) + begin;
@@ -340,7 +361,9 @@ unittest{
 }
 
 
-class Bounce{
+struct Bounce{
+    @disable this();
+    
 	static pure T easeIn(T)(T time, T begin, T duration, T change){
 		return change - easeOut(duration-time, T(0), change, duration) + begin;
 	}
