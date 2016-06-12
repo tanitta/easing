@@ -10,6 +10,15 @@ easing
 easing is a library that add flavor to motion in D programming language.
 
 ##Usage
+```
+import easing;
+auto output = input.linear;
+//                  |
+// easing function -+
+
+```
+
+If you would like to call with custom range, 
 
 ```
 import easing;
@@ -20,6 +29,16 @@ auto output = input.map!linear(0.0, 10.0, 0.0, 1.0);
 // max of input --------------------+     |    |
 // min of output -------------------------+    |
 // max of output ------------------------------+
+```
+
+Some functions have option.
+
+```
+auto output = input.easeInBack(1.5);
+```
+
+```
+auto output = input.map!easeInBack(0.0, 10.0, 0.0, 1.0, 1.5);
 ```
 
 ##Easing functions
