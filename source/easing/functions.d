@@ -16,27 +16,15 @@ struct Sine{
     import std.math;
 
     static pure T easeIn(T)(in T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return -change * cos(time/duration * (PI/T(2))) + change + begin;
+        return -cos(time * (PI/T(2))) + T(1);
     }
 
     static pure T easeOut(T)(in T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return change * sin(time/duration * (PI/T(2))) + begin;
+        return sin(time * (PI/T(2)));
     }
 
     static pure T easeInOut(T)(in T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return -change/T(2) * (cos(PI*time/duration) - T(1)) + begin;
+        return T(-0.5) * (cos(PI*time) - T(1));
     }
 }
 
@@ -59,31 +47,21 @@ unittest{
 struct Qubic{
     @disable this();
 
-    static pure T easeIn(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return change*(time/=duration)*time*time + begin;
+    static pure T easeIn(T)(in T time){
+        return time^^T(3.0);
     }
 
-    static pure T easeOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return change*((time=time/duration-T(1))*time*time + T(1)) + begin;
+    static pure T easeOut(T)(in T time){
+        return (time-T(1))^^T(3) + T(1);
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if ((time/=duration/T(2)) < T(1)){
-            return change/T(2)*time*time*time + begin;
-        }else {
-            return change/T(2)*((time-=T(2))*time*time + T(2)) + begin;
+    static pure T easeInOut(T)(in T time){
+        immutable t2 = time * T(2);
+        if (t2 < T(1)){
+            return T(0.5)*t2^^T(3);
+        }else{
+            immutable t2m2 = t2-T(2);
+            return T(0.5)*(t2m2^^T(3) + T(2));
         }
     }
 }
@@ -107,31 +85,22 @@ unittest{
 struct Quint{
     @disable this();
 
-    static pure T easeIn(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return change*(time/=duration)*time*time*time*time + begin;
+    static pure T easeIn(T)(in T time){
+        return time^^T(5);
     }
 
-    static pure T easeOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return change*((time=time/duration-T(1))*time*time*time*time + T(1)) + begin;
+    static pure T easeOut(T)(in T time){
+        immutable tm1 = time-T(1);
+        return (tm1^^5 + T(1));
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if ((time/=duration/T(2)) < 1){
-            return change/T(2)*time*time*time*time*time + begin;
+    static pure T easeInOut(T)(in T time){
+        immutable t2 = time * T(2);
+        if (t2 < 1){
+            return T(0.5)*t2^^T(5);
         }else {
-            return change/T(2)*((time-=T(2))*time*time*time*time + T(2)) + begin;
+            immutable t2m2 = t2-T(2);
+            return T(0.5)*(t2m2^^T(5) + T(2));
         }
     }
 }
@@ -156,31 +125,24 @@ struct Circ{
     @disable this();
 
     import std.math;
-    static pure T easeIn(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return -change * (sqrt(T(1) - (time/=duration)*time) - T(1)) + begin;
+    static pure T easeIn(T)(in T time){
+        return -(sqrt(T(1) - time*time) - T(1));
     }
 
-    static pure T easeOut(T)(T time){
-        T begin = T(0);
+    static pure T easeOut(T)(in T time){
         T duration = T(1);
-        T change = T(1);
         
-        return change * sqrt(T(1) - (time=time/duration-1)*time) + begin;
+        immutable tm1 = time - T(1);
+        return sqrt(T(1) - tm1^^T(2));
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if ((time/=duration/T(2)) < T(1)) {
-            return -change/T(2) * (sqrt(T(1) - time*time) - T(1)) + begin;
+    static pure T easeInOut(T)(in T time){
+        immutable t2 = time * T(2);
+        if (t2 < T(1)) {
+            return -T(0.5) * (sqrt(T(1) - t2^^2) - T(1));
         }else{
-            return change/T(2) * (sqrt(T(1) - (time-=T(2))*time) + T(1)) + begin;
+            immutable t2m2 = t2 - T(2);
+            return T(0.5) * (sqrt(T(1) - t2m2^^2) + T(1));
         }
     }
 }
@@ -206,52 +168,42 @@ struct Elastic{
 
     import std.math;
 
-    static pure T easeIn(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if (time==T(0)) return begin;
-        if ((time/=duration)==T(1)) return begin+change;
-        T p = duration*T(0.3);
-        T a = change;
-        T s = p/T(4);
-        T postFix =a*pow(T(2),T(10)*(time-=T(1)));
-        return -(postFix * sin((time*duration-s)*(T(2)*T(PI))/p )) + begin; 
+    static pure T easeIn(T)(in T time){
+        if (time==T(0)) return T(0);
+        if (time==T(1)) return T(1);
+        immutable p = T(0.3);
+        immutable a = T(1);
+        immutable s = p/T(4);
+        immutable tm1 = time-T(1);
+        T postFix =a*pow(T(2),T(10)*tm1);
+        return -(postFix * sin((tm1-s)*(T(2)*T(PI))/p ));
     }
 
-    static pure T easeOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if (time==T(0)) return begin;
-        if ((time/=duration)==T(1)) return begin+change;
-        T p = duration*T(0.3);
-        T a = change;
-        T s = p/T(4);
-        return (a*pow(T(2),T(-10)*time) * sin( (time*duration-s)*(T(2)*T(PI))/p ) + change + begin);
+    static pure T easeOut(T)(in T time){
+        if (time==T(0)) return T(0);
+        if (time==T(1)) return T(1);
+        immutable p = T(0.3);
+        immutable a = T(1);
+        immutable s = p/T(4);
+        return (a*pow(T(2),T(-10)*time) * sin( (time-s)*(T(2)*T(PI))/p ) + T(1));
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if (time==T(0)) return begin;
-        if ((time/=duration/T(2))==T(2)) return begin+change;
-        T p=duration*T(0.3*1.5);
-        T a=change;
+    static pure T easeInOut(T)(in T time){
+        if (time==T(0)) return T(0);
+        immutable t2 = time * T(2);
+        if (t2==T(2)) return T(1);
+        T p=T(0.3*1.5);
+        T a=T(1);
         T s=p/T(4);
 
-        if (time < T(1)) {
-            T postFix =a*pow(T(2),T(10)*(time-=T(1))); // postIncrement is evil
-            return T(-0.5)*(postFix* sin( (time*duration-s)*(T(2)*T(PI))/p )) + begin;
+        immutable t2m1 = t2 - T(1);
+        if (t2 < T(1)) {
+            T postFix =a*pow(T(2),T(10)*(t2m1)); // postIncrement is evil
+            return T(-0.5)*(postFix* sin( (t2m1-s)*(T(2)*T(PI))/p ));
         }
-        T postFix =  a*pow(T(2),T(-10)*(time-=T(1))); // postIncrement is evil
-        return postFix * sin( (time*duration-s)*(T(2)*T(PI))/p )*T(0.5) + change + begin;
+        T postFix =  a*pow(T(2),T(-10)*(t2m1)); // postIncrement is evil
+        return postFix * sin( (t2m1-s)*(T(2)*T(PI))/p )*T(0.5) + T(1);
     }
-
 }
 
 alias easeInElastic = Elastic.easeIn;
@@ -274,32 +226,18 @@ struct Quad{
     @disable this();
 
     static pure T easeIn(T)(in T time){
-        immutable begin = T(0);
-        immutable duration = T(1);
-        immutable change = T(1);
-        
-        immutable divTimeByDuration = time/duration; 
-        return change * divTimeByDuration^^2 + begin;
+        return time^^2;
     }
 
     static pure T easeOut(T)(in T time){
-        immutable begin = T(0);
-        immutable duration = T(1);
-        immutable change = T(1);
-        
-        immutable divTimeByDuration = time/duration; 
-        return -change * divTimeByDuration * (divTimeByDuration-T(2)) + begin;
+        return -time * (time-T(2));
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if (time < duration/T(2)){
-            return easeIn (time*T(2)) * T(0.5) + begin;
+    static pure T easeInOut(T)(in T time){
+        if (time < T(0.5)){
+            return easeIn(time*T(2)) * T(0.5);
         }else{
-            return easeOut (time*T(2)-duration) * T(0.5) + change*T(0.5) + begin;
+            return easeOut(time*T(2)-T(1)) * T(0.5) + T(0.5);
         }
     }
 }
@@ -323,31 +261,22 @@ unittest{
 struct Quart{
     @disable this();
 
-    static pure T easeIn(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return change*(time/=duration)*time*time*time + begin;
+    static pure T easeIn(T)(in T time){
+        return time^^4;
     }
 
-    static pure T easeOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return -change * ((time=time/duration-T(1))*time*time*time - T(1)) + begin;
+    static pure T easeOut(T)(in T time){
+        immutable tm1 = time - T(1);
+        return -(tm1^^4- T(1));
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if ((time/=duration/T(2)) < T(1)){
-            return change/T(2)*time*time*time*time + begin;
+    static pure T easeInOut(T)(in T time){
+        immutable t2 = time * T(2);
+        if (t2 < T(1)){
+            return T(0.5)*t2^^4;
         }else{
-            return -change/T(2) * ((time-=T(2))*time*time*time - T(2)) + begin;
+            immutable t2m2 = t2 - T(2);
+            return T(-0.5) * (t2m2^^4 - T(2));
         }
     }
 }
@@ -373,31 +302,31 @@ struct Expo{
 
     import std.math;
 
-    static pure T easeIn(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return (time==T(0)) ? begin : change * pow(T(2), T(10) * (time/duration - T(1))) + begin;
+    static pure T easeIn(T)(in T time){
+        if(time==T(0)){
+            return T(0);
+        }else{
+            return pow(T(2), T(10) * (time- T(1))) + T(0);
+        }
     }
 
-    static pure T easeOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return (time==duration) ? begin+change : change * (-pow(T(2), T(-10) * time/duration) + T(1)) + begin;
+    static pure T easeOut(T)(in T time){
+        if(time==T(1)){
+            return T(1);
+        }else{
+            return -pow(T(2), T(-10) * time) + T(1);
+        }
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if (time==T(0)) return begin;
-        if (time==duration) return begin+change;
-        if ((time/=duration/T(2)) < T(1)) return change/T(2) * pow(T(2), T(10) * (time - T(1))) + begin;
-        return change/T(2) * (-pow(T(2), T(-10) * --time) + T(2)) + begin;
+    static pure T easeInOut(T)(in T time){
+        if (time==T(0)) return T(0);
+        if (time==T(1)) return T(1);
+        immutable t2 = time*T(2);
+        if (t2 < T(1)) {
+            return T(0.5) * pow(T(2), T(10) * (t2 - T(1)));
+        }
+        immutable t2m1 = t2;
+        return T(0.5) * (-pow(T(2), T(-10) * t2m1) + T(2));
     }
 }
 
@@ -420,35 +349,23 @@ unittest{
 struct Back{
     @disable this();
 
-    static pure T easeIn(T)(T time, T s = 1.70158){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        immutable T postFix = time/=duration;
-        return change*(postFix)*time*((s+T(1))*time - s) + begin;
+    static pure T easeIn(T)(in T time, in T s = 1.70158){
+        return time^^2*((s+T(1))*time - s);
     }
 
-    static pure T easeOut(T)(T time, T s = 1.70158){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        time=time/duration-T(1);
-        return change*(time*time*((s+T(1))*time + s) + T(1)) + begin;
+    static pure T easeOut(T)(in T time, in T s = 1.70158){
+        immutable tm1 = time-T(1);
+        return (tm1^^2*((s+T(1))*tm1 + s) + T(1));
     }
 
-    static pure T easeInOut(T)(T time, T s = 1.70158){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        s*=(1.525f);
-        if ((time/=duration/T(2)) < T(1)){
-            return change/T(2)*(time*time*((s+T(1))*time - s)) + begin;
+    static pure T easeInOut(T)(in T time, in T s = 1.70158){
+        immutable sc = s * T(1.525f);
+        immutable t2 = time * T(2);
+        if (t2 < T(1)){
+            return T(0.5)*(t2^^2*((sc+T(1))*t2 - sc));
         }
-        immutable T postFix = time-=T(2);
-        return change/T(2)*((postFix)*time*((s+T(1))*time + s) + T(2)) + begin;
+        immutable t2m2 = t2 - T(2);
+        return T(0.5)*(t2m2^^2*((sc+T(1))*t2m2 + sc) + T(2));
     }
 }
 
@@ -458,6 +375,7 @@ alias easeInOutBack = Back.easeInOut;
 
 unittest{
     import std.math;
+    
     assert(approxEqual(0.0.easeInBack, 0.0));
     assert(approxEqual(1.0.easeInBack, 1.0));
 
@@ -472,42 +390,30 @@ unittest{
 struct Bounce{
     @disable this();
 
-    static pure T easeIn(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        return change - easeOut(duration-time) + begin;
+    static pure T easeIn(T)(in T time){
+        return T(1)- easeOut(T(1)-time);
     }
 
-    static pure T easeOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if ((time/=duration) < (T(1.0/2.75))) {
-            return change*(T(7.5625)*time*time) + begin;
+    static pure T easeOut(T)(in T time){
+        if ((time) < (T(1.0/2.75))) {
+            return (T(7.5625)*time^^2);
         } else if (time < T(2.0/2.75)) {
-            immutable postFix = time-= T(1.5/2.75);
-            return change*(T(7.5625)*(postFix)*time + T(0.75)) + begin;
+            immutable postFix = time - T(1.5/2.75);
+            return (T(7.5625)*postFix^^2+ T(0.75));
         } else if (time < T(2.5/2.75)) {
-            immutable postFix = time-= T(2.25/2.75);
-            return change*(T(7.5625)*(postFix)*time + T(0.9375)) + begin;
+            immutable postFix = time - T(2.25/2.75);
+            return (T(7.5625)*postFix^^2+ T(0.9375));
         } else {
-            immutable postFix = time-=T(2.625/2.75);
-            return change*(T(7.5625)*(postFix)*time + T(0.984375)) + begin;
+            immutable postFix = time-T(2.625/2.75);
+            return (T(7.5625)*postFix^^2+ T(0.984375));
         }
     }
 
-    static pure T easeInOut(T)(T time){
-        T begin = T(0);
-        T duration = T(1);
-        T change = T(1);
-        
-        if (time < duration/T(2)){
-            return easeIn(time*T(2)) * T(0.5) + begin; 
+    static pure T easeInOut(T)(in T time){
+        if (time < T(0.5)){
+            return easeIn(time*T(2)) * T(0.5);
         }else{ 
-            return easeOut(time*T(2)-duration) * T(0.5) + change*T(0.5) + begin;
+            return easeOut(time*T(2)-T(1)) * T(0.5) + T(0.5);
         }
     }
 }
