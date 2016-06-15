@@ -34,6 +34,9 @@ auto output = input.map!linear(0.0, 10.0, 0.0, 1.0);
 Some functions have option.
 
 ```
+auto output = input.easeQuadBezier(0.6, 0.7);
+auto output = input.easeCubicBezier(0.0, 1.0, 1.0, 0.0);
+
 auto output = input.easeInBack(1.5);
 ```
 
@@ -74,5 +77,7 @@ auto output = input.map!easeInBack(0.0, 10.0, 0.0, 1.0, 1.5);
 - easeInBounce
 - easeOutBounce
 - easeInOutBounce
+- easeCubicBezier
+- easeQuadBezier
 
 Please look at [http://easings.net/](http://easings.net/) regarding details of implemented functions.
