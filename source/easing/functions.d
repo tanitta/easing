@@ -433,3 +433,89 @@ unittest{
     assert(approxEqual(0.0.easeInOutBounce, 0.0));
     assert(approxEqual(1.0.easeInOutBounce, 1.0));
 }
+
+
+struct Bezier{
+    @disable this();
+    
+    static pure T cubic(T)(in T time, in T x1, in T y1, in T x2, in T y2, in T error = T(0.0001))
+    in{
+        assert(T(0)<=time && time<=T(1));
+        assert(T(0)<=x1 && x1<=T(1));
+        assert(T(0)<=x2 && x2<=T(1));
+    }body{
+        import std.math;
+        
+        T t = time;
+        auto dt = T(0);
+        
+        do {
+            dt = -(cubicParametricF(t, x1, x2) - time) / cubicParametricDF(t, x1, x2);
+            if(dt.isNaN)break;
+            t += dt;
+        } while (dt.fabs > error);
+        
+        return cubicParametricF(t, y1, y2);
+    }
+    
+    static pure T quad(T)(in T time, in T x, in T y, in T error = T(0.0001))
+    in{
+        assert(T(0)<=time && time<=T(1));
+        assert(T(0)<=x && x<=T(1));
+    }body{
+        import std.math;
+        
+        T t = time;
+        auto dt = T(0);
+        
+        do {
+            dt = -(quadParametricF(t, x) - time) / quadParametricDF(t, x);
+            if(dt.isNaN)break;
+            t += dt;
+        } while (dt.fabs > error);
+        
+        return quadParametricF(t, y);
+    }
+    
+    private{
+        static pure T cubicParametricF(T)(in T t, in T x1, in T x2){
+            return T(3) * (T(1) - t)^^2 * t * x1 + T(3) * (T(1) - t) * t^^2 * x2 + t^^3;
+        }
+        
+        static pure T cubicParametricDF(T)(in T t, in T x1, in T x2){
+            return T(-6) * (T(1)-t) * t * x1 +
+                T(3) * (T(1)-t) * (T(1) - t) * x1 +
+                T(-3) * t^^2 * x2 +
+                T(6) * (T(1) - t) * t * x2 + 
+                T(3) * t^^2;
+        }
+        
+        static pure T quadParametricF(T)(in T t, in T x){
+            return T(2) * (T(1)-t) * t * x + t^^2;
+        }
+        
+        static pure T quadParametricDF(T)(in T t, in T x){
+            return T(2) * (T(1)-t) * x - T(2) * t * (T(1) - x);
+        }
+    }
+}
+
+alias easeCubicBezier = Bezier.cubic;
+alias easeQuadBezier = Bezier.quad;
+
+unittest{
+    import std.math;
+    assert(approxEqual(0.0.easeCubicBezier(0.0, 0.0, 1.0, 1.0), 0.0));
+    assert(approxEqual(0.5.easeCubicBezier(0.0, 0.0, 1.0, 1.0), 0.5));
+    assert(approxEqual(1.0.easeCubicBezier(0.0, 0.0, 1.0, 1.0), 1.0));
+    
+    assert(approxEqual(0.0.easeCubicBezier(0.17, 0.67, 0.83, 0.67), 0.0));
+    assert(approxEqual(1.0.easeCubicBezier(0.17, 0.67, 0.83, 0.67), 1.0));
+    
+    assert(approxEqual(0.0.easeQuadBezier(0.5, 0.5), 0.0));
+    assert(approxEqual(0.5.easeQuadBezier(0.5, 0.5), 0.5));
+    assert(approxEqual(1.0.easeQuadBezier(0.5, 0.5), 1.0));
+    
+    assert(approxEqual(0.0.easeQuadBezier(0.6, 0.7), 0.0));
+    assert(approxEqual(1.0.easeQuadBezier(0.6, 0.7), 1.0));
+}
