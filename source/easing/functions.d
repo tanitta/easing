@@ -4,11 +4,28 @@ pure T linear(T)(in T time){
     return time;
 }
 
+pure T linearS(T)(in T[] args...)
+in{
+    assert(args.length >= 1);
+}body{
+    return linear!T(args[0]);
+}
+
 unittest{
     assert(0.0.linear == 0.0);
     assert(1.0.linear == 1.0);
 }
 
+private mixin template AddFunctionAcceptingSlice(string Name){
+    mixin(q"/
+        static pure T /"~Name~q"/S(T)(in T[] args...)
+        in{
+            assert(args.length >= 1);
+        }body{
+            return /"~Name~q"/!T(args[0]);
+        }
+    /");
+}
 
 struct Sine{
     @disable this();
@@ -26,6 +43,10 @@ struct Sine{
     static pure T easeInOut(T)(in T time){
         return T(-0.5) * (cos(PI*time) - T(1));
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInSine = Sine.easeIn;
@@ -64,6 +85,10 @@ struct Qubic{
             return T(0.5)*(t2m2^^T(3) + T(2));
         }
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInQubic = Qubic.easeIn;
@@ -103,6 +128,10 @@ struct Quint{
             return T(0.5)*(t2m2^^T(5) + T(2));
         }
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInQuint = Quint.easeIn;
@@ -145,6 +174,10 @@ struct Circ{
             return T(0.5) * (sqrt(T(1) - t2m2^^2) + T(1));
         }
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInCirc = Circ.easeIn;
@@ -204,6 +237,10 @@ struct Elastic{
         T postFix =  a*pow(T(2),T(-10)*(t2m1)); // postIncrement is evil
         return postFix * sin( (t2m1-s)*(T(2)*T(PI))/p )*T(0.5) + T(1);
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInElastic = Elastic.easeIn;
@@ -240,6 +277,10 @@ struct Quad{
             return easeOut(time*T(2)-T(1)) * T(0.5) + T(0.5);
         }
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInQuad = Quad.easeIn;
@@ -279,6 +320,10 @@ struct Quart{
             return T(-0.5) * (t2m2^^4 - T(2));
         }
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInQuart = Quart.easeIn;
@@ -328,6 +373,10 @@ struct Expo{
         immutable t2m1 = t2;
         return T(0.5) * (-pow(T(2), T(-10) * t2m1) + T(2));
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInExpo = Expo.easeIn;
@@ -353,10 +402,30 @@ struct Back{
         return time^^2*((s+T(1))*time - s);
     }
 
+    static pure T easeInS(T)(in T[] args ...)in{
+        assert(args.length >= 1);
+    }body{
+        immutable time = args[0];
+        immutable s = (args.length>1)?args[1]:1.70158;
+        return easeIn!(T)(time, s);
+    }
+
     static pure T easeOut(T)(in T time, in T s = 1.70158){
         immutable tm1 = time-T(1);
         return (tm1^^2*((s+T(1))*tm1 + s) + T(1));
     }
+
+    static pure T easeOutS(T)(in T[] args ...)in{
+        assert(args.length >= 1);
+    }body{
+        immutable time = args[0];
+        immutable s = (args.length>1)?args[1]:1.70158;
+        return easeOut!(T)(time, s);
+    }
+
+    // static pure T easeInS(T)(in T[] args ...){
+    //
+    // }
 
     static pure T easeInOut(T)(in T time, in T s = 1.70158){
         immutable sc = s * T(1.525f);
@@ -366,6 +435,14 @@ struct Back{
         }
         immutable t2m2 = t2 - T(2);
         return T(0.5)*(t2m2^^2*((sc+T(1))*t2m2 + sc) + T(2));
+    }
+
+    static pure T easeInOutS(T)(in T[] args ...)in{
+        assert(args.length >= 1);
+    }body{
+        immutable time = args[0];
+        immutable s = (args.length>1)?args[1]:1.70158;
+        return easeInOut!(T)(time, s);
     }
 }
 
@@ -457,6 +534,18 @@ struct Bezier{
         
         return cubicParametricF(t, y1, y2);
     }
+
+    static pure T cubicS(T)(in T[] args ...)in{
+        assert(args.length >= 5);
+    }body{
+        immutable time = args[0];
+        immutable x1= args[1];
+        immutable y1= args[2];
+        immutable x2= args[3];
+        immutable y2= args[4];
+        immutable error = (args.length>5)?args[5]:T(0.0001);
+        return cubic!N(time, x1, y1, x2, y2, error);
+    }
     
     static pure T quad(T)(in T time, in T x, in T y, in T error = T(0.0001))
     in{
@@ -475,6 +564,16 @@ struct Bezier{
         } while (dt.fabs > error);
         
         return quadParametricF(t, y);
+    }
+
+    static pure T quadS(T)(in T[] args ...)in{
+        assert(args.length >= 3);
+    }body{
+        immutable time = args[0];
+        immutable x = args[1];
+        immutable y = args[2];
+        immutable error = (args.length>3)?args[3]:T(0.0001);
+        return quadS!N(time, x, y, error);
     }
     
     private{
