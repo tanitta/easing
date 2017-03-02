@@ -4,7 +4,7 @@ pure T linear(T)(in T time){
     return time;
 }
 
-pure T linearS(T)(in T[] args...)
+pure T linearS(T)(T[] args...)
 in{
     assert(args.length >= 1);
 }body{
@@ -16,6 +16,11 @@ unittest{
     assert(1.0.linear == 1.0);
 }
 
+unittest{
+    assert([1.0].linearS == 1.0);
+    assert(1.0.linearS == 1.0);
+}
+
 private mixin template AddFunctionAcceptingSlice(string Name){
     mixin(q"/
         static pure T /"~Name~q"/S(T)(in T[] args...)
@@ -25,6 +30,10 @@ private mixin template AddFunctionAcceptingSlice(string Name){
             return /"~Name~q"/!T(args[0]);
         }
     /");
+}
+
+unittest{
+    assert(1.0.easeInOutSineS == 1.0);
 }
 
 struct Sine{
@@ -52,6 +61,9 @@ struct Sine{
 alias easeInSine = Sine.easeIn;
 alias easeOutSine = Sine.easeOut;
 alias easeInOutSine = Sine.easeInOut;
+alias easeInSineS = Sine.easeInS;
+alias easeOutSineS = Sine.easeOutS;
+alias easeInOutSineS = Sine.easeInOutS;
 
 unittest{
     assert(0.0.easeInSine == 0.0);
@@ -94,6 +106,9 @@ struct Qubic{
 alias easeInQubic = Qubic.easeIn;
 alias easeOutQubic = Qubic.easeOut;
 alias easeInOutQubic = Qubic.easeInOut;
+alias easeInQubicS = Qubic.easeInS;
+alias easeOutQubicS = Qubic.easeOutS;
+alias easeInOutQubicS = Qubic.easeInOutS;
 
 unittest{
     assert(0.0.easeInQubic == 0.0);
@@ -137,6 +152,9 @@ struct Quint{
 alias easeInQuint = Quint.easeIn;
 alias easeOutQuint = Quint.easeOut;
 alias easeInOutQuint = Quint.easeInOut;
+alias easeInQuintS = Quint.easeInS;
+alias easeOutQuintS = Quint.easeOutS;
+alias easeInOutQuintS = Quint.easeInOutS;
 
 unittest{
     assert(0.0.easeInQuint == 0.0);
@@ -183,6 +201,9 @@ struct Circ{
 alias easeInCirc = Circ.easeIn;
 alias easeOutCirc = Circ.easeOut;
 alias easeInOutCirc = Circ.easeInOut;
+alias easeInCircS = Circ.easeInS;
+alias easeOutCircS = Circ.easeOutS;
+alias easeInOutCircS = Circ.easeInOutS;
 
 unittest{
     assert(0.0.easeInCirc == 0.0);
@@ -246,6 +267,9 @@ struct Elastic{
 alias easeInElastic = Elastic.easeIn;
 alias easeOutElastic = Elastic.easeOut;
 alias easeInOutElastic = Elastic.easeInOut;
+alias easeInElasticS = Elastic.easeInS;
+alias easeOutElasticS = Elastic.easeOutS;
+alias easeInOutElasticS = Elastic.easeInOutS;
 
 unittest{
     assert(0.0.easeInElastic == 0.0);
@@ -286,6 +310,9 @@ struct Quad{
 alias easeInQuad = Quad.easeIn;
 alias easeOutQuad = Quad.easeOut;
 alias easeInOutQuad = Quad.easeInOut;
+alias easeInQuadS = Quad.easeInS;
+alias easeOutQuadS = Quad.easeOutS;
+alias easeInOutQuadS = Quad.easeInOutS;
 
 unittest{
     assert(0.0.easeInQuad == 0.0);
@@ -329,6 +356,9 @@ struct Quart{
 alias easeInQuart = Quart.easeIn;
 alias easeOutQuart = Quart.easeOut;
 alias easeInOutQuart = Quart.easeInOut;
+alias easeInQuartS = Quart.easeInS;
+alias easeOutQuartS = Quart.easeOutS;
+alias easeInOutQuartS = Quart.easeInOutS;
 
 unittest{
     assert(0.0.easeInQuart == 0.0);
@@ -382,6 +412,9 @@ struct Expo{
 alias easeInExpo = Expo.easeIn;
 alias easeOutExpo = Expo.easeOut;
 alias easeInOutExpo = Expo.easeInOut;
+alias easeInExpoS = Expo.easeInS;
+alias easeOutExpoS = Expo.easeOutS;
+alias easeInOutExpoS = Expo.easeInOutS;
 
 unittest{
     assert(0.0.easeInExpo == 0.0);
@@ -449,6 +482,9 @@ struct Back{
 alias easeInBack = Back.easeIn;
 alias easeOutBack = Back.easeOut;
 alias easeInOutBack = Back.easeInOut;
+alias easeInBackS = Back.easeInS;
+alias easeOutBackS = Back.easeOutS;
+alias easeInOutBackS = Back.easeInOutS;
 
 unittest{
     import std.math;
@@ -493,11 +529,18 @@ struct Bounce{
             return easeOut(time*T(2)-T(1)) * T(0.5) + T(0.5);
         }
     }
+
+    mixin AddFunctionAcceptingSlice!("easeIn");
+    mixin AddFunctionAcceptingSlice!("easeOut");
+    mixin AddFunctionAcceptingSlice!("easeInOut");
 }
 
 alias easeInBounce = Bounce.easeIn;
 alias easeOutBounce = Bounce.easeOut;
 alias easeInOutBounce = Bounce.easeInOut;
+alias easeInBounceS = Bounce.easeInS;
+alias easeOutBounceS = Bounce.easeOutS;
+alias easeInOutBounceS = Bounce.easeInOutS;
 
 unittest{
     import std.math;
@@ -544,7 +587,7 @@ struct Bezier{
         immutable x2= args[3];
         immutable y2= args[4];
         immutable error = (args.length>5)?args[5]:T(0.0001);
-        return cubic!N(time, x1, y1, x2, y2, error);
+        return cubic!T(time, x1, y1, x2, y2, error);
     }
     
     static pure T quad(T)(in T time, in T x, in T y, in T error = T(0.0001))
@@ -573,7 +616,7 @@ struct Bezier{
         immutable x = args[1];
         immutable y = args[2];
         immutable error = (args.length>3)?args[3]:T(0.0001);
-        return quadS!N(time, x, y, error);
+        return quad!T(time, x, y, error);
     }
     
     private{
@@ -601,6 +644,8 @@ struct Bezier{
 
 alias easeCubicBezier = Bezier.cubic;
 alias easeQuadBezier = Bezier.quad;
+alias easeCubicBezierS = Bezier.cubicS;
+alias easeQuadBezierS = Bezier.quadS;
 
 unittest{
     import std.math;
@@ -617,4 +662,13 @@ unittest{
     
     assert(approxEqual(0.0.easeQuadBezier(0.6, 0.7), 0.0));
     assert(approxEqual(1.0.easeQuadBezier(0.6, 0.7), 1.0));
+}
+
+unittest{
+    import std.math;
+    assert(approxEqual(1.0.easeQuadBezierS(0.6, 0.7), 1.0));
+    assert(approxEqual(1.0.easeCubicBezierS(0.0, 0.0, 1.0, 1.0), 1.0));
+    assert(approxEqual(1.0.easeCubicBezierS(0.0, 0.0, 1.0, 1.0, 0.00001), 1.0));
+    assert(approxEqual(easeCubicBezierS([1.0, 0.0, 0.0, 1.0, 1.0]), 1.0));
+    assert(approxEqual([1.0, 0.0, 0.0, 1.0, 1.0].easeCubicBezierS, 1.0));
 }
