@@ -4,7 +4,7 @@ pure T linear(T)(in T time){
     return time;
 }
 
-pure T linearS(T)(T[] args...)
+pure T linearS(T)(in T[] args...)
 in{
     assert(args.length >= 1);
 }body{
