@@ -4,6 +4,7 @@ easing
 [![Dub version](https://img.shields.io/dub/v/easing.svg)](https://code.dlang.org/packages/easing)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/tanitta/easing/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/tanitta/easing.svg?branch=master)](https://travis-ci.org/tanitta/easing)
+[![Dub downloads](https://img.shields.io/dub/dt/easing.svg)](https://code.dlang.org/packages/easing)
 
 ##Description
 
