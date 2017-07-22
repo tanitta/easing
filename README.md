@@ -6,11 +6,11 @@ easing
 [![Build Status](https://travis-ci.org/tanitta/easing.svg?branch=master)](https://travis-ci.org/tanitta/easing)
 [![Dub downloads](https://img.shields.io/dub/dt/easing.svg)](https://code.dlang.org/packages/easing)
 
-##Description
+## Description
 
 easing is a library that add flavor to motion in D programming language.
 
-##Usage
+## Usage
 ```
 import easing;
 auto output = input.linear;
@@ -45,7 +45,7 @@ auto output = input.easeInBack(1.5);
 auto output = input.map!easeInBack(0.0, 10.0, 0.0, 1.0, 1.5);
 ```
 
-##Easing functions
+## Easing functions
 
 - linear
 - easeInSine
